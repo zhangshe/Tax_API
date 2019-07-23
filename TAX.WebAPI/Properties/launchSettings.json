@@ -1,0 +1,20 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/TAX.WebAPI",
+      "sslPort": 0
+    },
+    "iisExpress": {
+      "applicationUrl": "http://localhost:7088/",
+      "sslPort": 0
+    }
+  },
+  "profiles": {
+    "TAX.WebAPI": {
+      "commandName": "IISExpress",
+      "applicationUrl": "http://localhost:9077"
+    }
+  }
+}

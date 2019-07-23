@@ -1,0 +1,6 @@
+{
+  "DataType": "SQLSERVER",
+  "MYSQL": "server=localhost;user id=root;pwd=123456;database=individualtax;SslMode = none;Charset=utf8",
+  "SQLSERVER": "server=weiapp.pw;user id=sa;pwd=Lhsm7800525;database=tax",
+  "ORACLE": "server=localhost;user id=root;pwd=root;database=uidp;SslMode = none;Charset=utf8"
+}

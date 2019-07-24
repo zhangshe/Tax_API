@@ -995,6 +995,15 @@ namespace UIDP.BIZModule
         public static ImportTaxSalary1 HardCode1(ExcelDataRow row)
         {
             var t = new ImportTaxSalary1();
+            Type type = t.GetType();
+            PropertyInfo[] propertyInfos = type.GetProperties();
+            //foreach (PropertyInfo prop in propertyInfos)
+            //{
+            //    if (prop.GetType().ToString().ToUpper()=="STRING")
+            //    {
+            //        t.GetType()=row.DataCols.SingleOrDefault
+            //    }
+            //}
             t.S_WorkerCode = row.DataCols.SingleOrDefault(c => c.PropertyName == "S_WorkerCode").ColValue.Replace(" ", "");
             t.S_WorkerName = row.DataCols.SingleOrDefault(c => c.PropertyName == "S_WorkerName").ColValue.Replace(" ", "");
             t.S_OrgName = row.DataCols.SingleOrDefault(c => c.PropertyName == "S_OrgName").ColValue.Replace(" ", "");

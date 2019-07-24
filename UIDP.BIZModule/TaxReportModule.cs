@@ -166,7 +166,7 @@ namespace UIDP.BIZModule
                 DataTable dt = ds.Tables[0];
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    DataRow[] rows = dt.Select("ReportStatus=-1");
+                    DataRow[] rows = dt.Select("ReportStatus=-1 AND IsComputeTax=1");
                     if (rows.Length > 0)
                     {
                         res["TaxStatus"] = -1;
@@ -177,7 +177,7 @@ namespace UIDP.BIZModule
                         res["code"] = 2000;
                         return res;
                     }
-                    rows = dt.Select("ReportStatus=0");
+                    rows = dt.Select("ReportStatus=0 AND IsComputeTax=1");
                     if (rows.Length > 0)
                     {
                         res["TaxStatus"] = 0;
@@ -188,7 +188,7 @@ namespace UIDP.BIZModule
                         res["code"] = 2000;
                         return res;
                     }
-                    rows = dt.Select("ReportStatus=1");
+                    rows = dt.Select("ReportStatus=1 AND IsComputeTax=1");
                     if (rows.Length > 0)
                     {
                         res["TaxStatus"] = 1;
@@ -199,7 +199,7 @@ namespace UIDP.BIZModule
                         res["code"] = 2000;
                         return res;
                     }
-                    rows = dt.Select("ReportStatus=2");
+                    rows = dt.Select("ReportStatus=2 AND IsComputeTax=1");
                     if (rows.Length > 0)
                     {
                         res["TaxStatus"] = 2;

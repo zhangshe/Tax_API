@@ -999,9 +999,9 @@ namespace UIDP.BIZModule
             //PropertyInfo[] propertyInfos = type.GetProperties();
             //foreach (PropertyInfo prop in propertyInfos)
             //{
-            //    if (prop.GetType().ToString().ToUpper()=="STRING")
+            //    if (prop.PropertyType==typeof(string))
             //    {
-            //        t.GetType()=row.DataCols.SingleOrDefault
+            //        prop.SetValue()
             //    }
             //}
             t.S_WorkerCode = row.DataCols.SingleOrDefault(c => c.PropertyName == "S_WorkerCode").ColValue.Replace(" ", "");

@@ -3,8 +3,10 @@ using NPOI.SS.UserModel;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using UIDP.ODS;
 using UIDP.UTILITY;
@@ -539,7 +541,7 @@ namespace UIDP.BIZModule
                         foreach (var item in rows)
                         {
                             list1.Add(HardCode1(item));//将excel数据转换为List对象
-                            hardCodeMsg = "第" + list1.Count() + 1 + "条数据硬编码错误";
+                            hardCodeMsg = "第" + (list1.Count() + 1) + "条数据硬编码错误";
                         }
                         hardCodeMsg = "";
                         //lst1 = list1.GroupBy(x => x.S_OrgName);
@@ -1031,6 +1033,8 @@ namespace UIDP.BIZModule
             t.Adjust7 = Convert.ToDecimal(isnull(row.DataCols.SingleOrDefault(c => c.PropertyName == "Adjust7")?.ColValue));
             t.Adjust8 = Convert.ToDecimal(isnull(row.DataCols.SingleOrDefault(c => c.PropertyName == "Adjust8")?.ColValue));
             return t;
+
+
         }
 
         public static string isnull(string value)

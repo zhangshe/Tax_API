@@ -272,6 +272,11 @@ namespace UIDP.ODS
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
+        public DataTable getTaxPlayerInfoByWorkerNumber()
+        {
+            string sql = "select WorkerNumber,WorkerName from tax_taxpayerinfo";
+            return DB.GetDataTable(sql);
+        }
         public DataTable getTaxPlayerInfoByWorkerNumber(string id)
         {
             string sql = "select * from tax_taxpayerinfo where WorkerNumber='" + id + "'";

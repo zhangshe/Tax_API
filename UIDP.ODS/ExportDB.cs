@@ -101,7 +101,7 @@ namespace UIDP.ODS
         {
             string sql = " select * from (select isnull(c.S_Id,'') S_Id,isnull(c.S_WorkDate,'')S_WorkDate,a.ORG_ID,a.ORG_NAME S_OrgName,a.ORG_CODE S_OrgCode,isnull(b.IsComputeTax,0) IsComputeTax,CASE WHEN((b.IsComputeTax = 0 OR b.IsComputeTax IS NULL) and c.ReportStatus is null ) THEN '1' ELSE isnull(c.ReportStatus,-1) END ReportStatus  ";
             sql += "  from ts_uidp_org a ";
-            sql += "  join tax_org  b on a.ORG_CODE=b.S_OrgCode ";
+            sql += "  join tax_org  b on a.ORG_CODE=b.S_OrgCode and b.IsComputeTax=1";
             sql += "  left join tax_reportstatus c on c.S_OrgCode=a.ORG_CODE and DATEDIFF(m,c.S_WorkDate,'" + DateTime.Parse(d["WorkDate"].ToString()).ToString("yyyy-MM-dd") + "')=0 ";
             sql += " where a.ORG_CODE='" + d["OrgCode"].ToString() + "' and len(a.ORG_CODE)>3 ";
             // sql += " and  exists (select  1  from tax_taxpayerinfo where S_OrgCode=a.ORG_CODE ) ";
@@ -118,7 +118,7 @@ namespace UIDP.ODS
             sql += " union  ";
             sql += " select * from ( select  isnull(c.S_Id,'') S_Id,isnull(c.S_WorkDate,'')S_WorkDate,a.ORG_ID,a.ORG_NAME S_OrgName,a.ORG_CODE S_OrgCode,isnull(b.IsComputeTax,0) IsComputeTax,CASE WHEN((b.IsComputeTax = 0 OR b.IsComputeTax IS NULL) and c.ReportStatus is null ) THEN '1' ELSE isnull(c.ReportStatus,-1) END ReportStatus    ";
             sql += " from ts_uidp_org a ";
-            sql += "  join tax_org  b on a.ORG_CODE=b.S_OrgCode  ";
+            sql += "  join tax_org  b on a.ORG_CODE=b.S_OrgCode and b.IsComputeTax=1 ";
             sql += " left join tax_reportstatus c on c.S_OrgCode=a.ORG_CODE and DATEDIFF(m,c.S_WorkDate,'" + DateTime.Parse(d["WorkDate"].ToString()).ToString("yyyy-MM-dd") + "')=0 ";
             sql += " where a.ORG_CODE like '" + d["OrgCode"].ToString() + "'+'%' AND a.ORG_CODE<>'" + d["OrgCode"].ToString() + "' and LEN(a.ORG_CODE)=LEN('" + d["OrgCode"].ToString() + "')+3 ";
             // sql += " and  exists (select  1  from tax_taxpayerinfo where S_OrgCode=a.ORG_CODE ) ";

@@ -17,7 +17,7 @@ namespace UIDP.ODS
         /// <returns></returns>
         public DataSet getOneTimeBonusList(Dictionary<string, object> d, int page, int limit)
         {
-            string sql = "select a.S_WorkerCode,max(a.S_WorkDate)S_WorkDate into #temp from [dbo].[tax_salary] a  where 1=1 ";//temp 查询工作月份最新的人
+            string sql = "select a.S_WorkerCode,max(a.S_WorkDate)S_WorkDate,a.S_Department into #temp from [dbo].[tax_salary] a  where 1=1 ";//temp 查询工作月份最新的人
             if (d.Keys.Contains("S_Department") && d["S_Department"] != null && d["S_Department"].ToString() != "")
             {
                 sql += " and a.S_Department like '%" + d["S_Department"].ToString() + "%' ";
@@ -39,10 +39,10 @@ namespace UIDP.ODS
                 sql += " and b.S_OrgCode like '" + d["S_OrgCode"].ToString() + "%' ";
             }
             sql += " ) ";
-            sql += " group by a.S_WorkerCode ";
-            sql += @"select ROW_NUMBER () OVER ( ORDER BY a.S_WorkerCode ) AS non,a.*,[dbo].[fn_onetimecal](a.onetimebonus-a.FreeIncome) as Tax,c.S_Department into #tempBonus from tax_onetimebonus a ";
+            sql += " group by a.S_WorkerCode,a.S_Department ";
+            sql += @"select ROW_NUMBER () OVER ( ORDER BY a.S_WorkerCode ) AS non,a.*,[dbo].[fn_onetimecal](a.onetimebonus-a.FreeIncome) as Tax,b.S_Department into #tempBonus from tax_onetimebonus a ";
             sql += " join #temp b on a.S_WorkerCode=b.S_WorkerCode ";
-            sql += " join  [dbo].[tax_salary] c on c.S_WorkerCode=b.S_WorkerCode ";
+            //sql += " join  [dbo].[tax_salary] c on c.S_WorkerCode=b.S_WorkerCode ";
             sql += " order by a.S_WorkDate desc ,a.S_WorkerCode";
 
             // return db.GetDataTable(sql);

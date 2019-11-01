@@ -706,7 +706,7 @@ namespace UIDP.BIZModule
                         importModel = taxOrgdt.Rows[0]["ImportModel"].ToString();//获取导入模板类型
                     }
                 }
-
+                DataTable TaxPlayerdt = taxPlayer.getTaxPlayerInfoByWorkerNumber();//获取纳税人信息
                 if (importModel == "样表一")
                 {
                     rows = ExcelConverter.Convert<ImportTaxSalary1>(Sheet, HeaderRow, 1);
@@ -733,12 +733,12 @@ namespace UIDP.BIZModule
                         string inserttaxpayer = "";//新增人员信息
                         string updatetaxpayer = "";//修改人员信息
                         DataTable dt = db.getTaxSalaryPersonByOrgMonth(importOrgCode, dateMonth, importModel);
+
                         if (dt != null)
                         {
                             List<ImportTaxSalary1> uplst = KVTool.TableToList<ImportTaxSalary1>(dt);
                             List<string> impstrlst = list1.Select(o => o.S_WorkerCode).ToList();
                             List<string> upstrlst = uplst.Select(o => o.S_WorkerCode).ToList();
-
                         ////工号不一致补丁----------------------------------------------------------------------------
                         //List<int> listInt = impstrlst.Select<string, int>(x => Convert.ToInt32(x)).ToList();
                         //impstrlst = listInt.ConvertAll<string>(x => x.ToString());
@@ -761,15 +761,15 @@ namespace UIDP.BIZModule
                                 {
                                     foreach (var additem in listadd)
                                     {
-                                        DataTable dtTaxPlayer = taxPlayer.getTaxPlayerInfoByWorkerNumber(additem.Trim());
-                                        if (dtTaxPlayer != null && dtTaxPlayer.Rows.Count > 0)
+                                      DataRow[] dtTaxPlayer = TaxPlayerdt.Select("WorkerNumber='" + additem.Trim() + "'");
+                                        if (dtTaxPlayer != null && dtTaxPlayer.Length > 0)
                                         {
                                         addPersonsql = @"insert into tax_taxpayerrecord (S_Id,S_OrgCode,S_CreateDate,S_CreateBy,WorkerName,WorkerCode,ImportMonth,WorkerStatus) values ("
                                         + "'" + Guid.NewGuid().ToString() + "',"
                                         + "'" + importOrgCode + "',"
                                         + "'" + DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "',"
                                          + "'" + userId + "',"
-                                         + "'" + dtTaxPlayer.Rows[0]["WorkerName"].ToString() + "',"
+                                         + "'" + dtTaxPlayer[0]["WorkerName"].ToString() + "',"
                                           + "'" + additem + "',"
                                           + "'" + dateMonth.ToString("yyyy-MM-dd") + "',1)";
                                         sb.Append(addPersonsql);
@@ -887,15 +887,16 @@ namespace UIDP.BIZModule
                             {
                                 foreach (var additem in listadd)
                                 {
-                                    DataTable dtTaxPlayer = taxPlayer.getTaxPlayerInfoByWorkerNumber(additem.Trim());
-                                    if (dtTaxPlayer != null && dtTaxPlayer.Rows.Count > 0)
+                                    //DataTable dtTaxPlayer = taxPlayer.getTaxPlayerInfoByWorkerNumber(additem.Trim());
+                                    DataRow[] dtTaxPlayer = TaxPlayerdt.Select("WorkerNumber='" + additem.Trim() + "'");
+                                    if (dtTaxPlayer != null && dtTaxPlayer.Length > 0)
                                     {
                                         addPersonsql = @"insert into tax_taxpayerrecord (S_Id,S_OrgCode,S_CreateDate,S_CreateBy,WorkerName,WorkerCode,ImportMonth,WorkerStatus) values ("
                                                                               + "'" + Guid.NewGuid().ToString() + "',"
                                                                               + "'" + importOrgCode + "',"
                                                                               + "'" + DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "',"
                                                                                + "'" + userId + "',"
-                                                                               + "'" + dtTaxPlayer.Rows[0]["WorkerName"].ToString() + "',"
+                                                                               + "'" + dtTaxPlayer[0]["WorkerName"].ToString() + "',"
                                                                                 + "'" + additem + "',"
                                                                                 + "'" + dateMonth.ToString("yyyy-MM-dd") + "',1)";
                                         sb.Append(addPersonsql);
@@ -995,13 +996,13 @@ namespace UIDP.BIZModule
         public static ImportTaxSalary1 HardCode1(ExcelDataRow row)
         {
             var t = new ImportTaxSalary1();
-            //Type type = t.GetType();
-            //PropertyInfo[] propertyInfos = type.GetProperties();
+            Type type = t.GetType();
+            PropertyInfo[] propertyInfos = type.GetProperties();
             //foreach (PropertyInfo prop in propertyInfos)
             //{
-            //    if (prop.PropertyType==typeof(string))
+            //    if (prop.GetType().ToString().ToUpper()=="STRING")
             //    {
-            //        prop.SetValue()
+            //        t.GetType()=row.DataCols.SingleOrDefault
             //    }
             //}
             t.S_WorkerCode = row.DataCols.SingleOrDefault(c => c.PropertyName == "S_WorkerCode").ColValue.Replace(" ", "");
@@ -1464,6 +1465,7 @@ namespace UIDP.BIZModule
             int addnum = 0;//新增人数
             int insertnum = 0;//调入人数
             DataTable dt = db.getTaxSalaryPersonByOrgMonth(orgCode, dateMonth, importModel);
+            DataTable TaxPlayerdt = taxPlayer.getTaxPlayerInfoByWorkerNumber();//获取纳税人信息
             if (dt != null)
             {
                 List<ImportTaxSalary1> uplst = KVTool.TableToList<ImportTaxSalary1>(dt);
@@ -1488,11 +1490,12 @@ namespace UIDP.BIZModule
                     {
                         foreach (var additem in listadd)
                         {
-                            DataTable dtTaxPlayer = taxPlayer.getTaxPlayerInfoByWorkerNumber(additem);
-                            if (dtTaxPlayer != null && dtTaxPlayer.Rows.Count > 0)
+                            //DataTable dtTaxPlayer = taxPlayer.getTaxPlayerInfoByWorkerNumber(additem);
+                            DataRow[] dtTaxPlayer = TaxPlayerdt.Select("WorkerNumber='" + additem.Trim() + "'");
+                            if (dtTaxPlayer != null && dtTaxPlayer.Length > 0)
                             {
                                 addnum++;
-                                addPerson += "【" + additem + "：" + (dtTaxPlayer.Rows[0]["WorkerName"]==null?"": dtTaxPlayer.Rows[0]["WorkerName"].ToString()) + "】";
+                                addPerson += "【" + additem + "：" + (dtTaxPlayer[0]["WorkerName"]==null?"": dtTaxPlayer[0]["WorkerName"].ToString()) + "】";
                             }
                             else
                             {
@@ -1643,6 +1646,7 @@ namespace UIDP.BIZModule
             int addnum = 0;//新增人数
             int insertnum = 0;//调入人数
             DataTable dt = db.getTaxSalaryPersonByOrgMonth(orgCode, dateMonth, importModel);
+            DataTable TaxPlayerdt = taxPlayer.getTaxPlayerInfoByWorkerNumber();//获取纳税人信息
             if (dt != null)
             {
                 List<ImportTaxSalary2> uplst = KVTool.TableToList<ImportTaxSalary2>(dt);
@@ -1667,11 +1671,12 @@ namespace UIDP.BIZModule
                     {
                         foreach (var additem in listadd)
                         {
-                            DataTable dtTaxPlayer = taxPlayer.getTaxPlayerInfoByWorkerNumber(additem);
-                            if (dtTaxPlayer != null && dtTaxPlayer.Rows.Count > 0)
+                            //DataTable dtTaxPlayer = taxPlayer.getTaxPlayerInfoByWorkerNumber(additem);
+                            DataRow[] dtTaxPlayer = TaxPlayerdt.Select("WorkerNumber='" + additem.Trim() + "'");
+                            if (dtTaxPlayer != null && dtTaxPlayer.Length > 0)
                             {
                                 addnum++;
-                                addPerson += "【" + additem + "：" + (dtTaxPlayer.Rows[0]["WorkerName"] == null ? "" : dtTaxPlayer.Rows[0]["WorkerName"].ToString()) + "】";
+                                addPerson += "【" + additem + "：" + (dtTaxPlayer[0]["WorkerName"] == null ? "" : dtTaxPlayer[0]["WorkerName"].ToString()) + "】";
                             }
                             else
                             {

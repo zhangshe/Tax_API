@@ -712,7 +712,7 @@ namespace UIDP.BIZModule
                     rows = ExcelConverter.Convert<ImportTaxSalary1>(Sheet, HeaderRow, 1);
                     foreach (var item in rows)
                     {
-                        list1.Add(HardCode1(item));//将excel数据转换为List对象
+                        list1.Add(HardCode1(item));//将excel数据转换为List对象                  
                     }
 
                     //lst1 = list1.GroupBy(x => x.S_OrgName);

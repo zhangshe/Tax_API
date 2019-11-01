@@ -163,29 +163,36 @@ namespace UIDP.ODS
             }
             //string sql = sb.ToString();
             sqllst.Add(sb.ToString());
+            string tempSql = "SELECT a.S_WorkerCode,a.S_WorkDate, SUM( a.Adjust9 ) AS a9,SUM ( a.Adjust10 ) AS a10,SUM ( a.Adjust11 ) AS a11,SUM ( a.Adjust12 ) AS a12,SUM ( a.Adjust13 ) AS a13," +
+                "SUM ( a.Adjust14 ) AS a14,SUM ( a.Adjust15 ) AS a15, SUM ( a.Adjust16 ) AS a16,SUM ( a.Adjust17 ) AS a17,SUM ( a.Adjust18 ) AS a18,SUM ( a.Adjust19 ) AS a19,SUM ( a.Adjust20 ) AS a20," +
+                "SUM ( a.Adjust21 ) AS a21,SUM ( a.Adjust22 ) AS a22,SUM ( a.Adjust23 ) AS a23,SUM ( a.Adjust24 ) AS a24,SUM ( a.Adjust25 ) AS a25,SUM ( a.Adjust26 ) AS a26," +
+                "SUM ( a.Adjust27 ) AS a27,SUM ( a.Adjust28 ) AS a28 INTO #temp from tax_adjust a  where S_Batch='"+batch+ "'" +
+                " AND DATEDIFF(m,a.S_WorkDate,'" + dateMonth.ToString("yyyy-MM-dd") + "') = 0" +
+                " GROUP BY a.S_WorkerCode,a.S_WorkDate ";
+            sqllst.Add(tempSql);
             string updateSql = @"update a set a.S_UpdateBy ='" + userId + "',a.S_UpdateDate='" + DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "'," + @"
-a.Adjust9=isnull(a.Adjust9,0)+isnull(b.Adjust9,0),
-a.Adjust10=isnull(a.Adjust10,0)+isnull(b.Adjust10,0),
-a.Adjust11=isnull(a.Adjust11,0)+isnull(b.Adjust11,0),
-a.Adjust12=isnull(a.Adjust12,0)+isnull(b.Adjust12,0),
-a.Adjust13=isnull(a.Adjust13,0)+isnull(b.Adjust13,0),
-a.Adjust14=isnull(a.Adjust14,0)+isnull(b.Adjust14,0),
-a.Adjust15=isnull(a.Adjust15,0)+isnull(b.Adjust15,0),
-a.Adjust16=isnull(a.Adjust16,0)+isnull(b.Adjust16,0),
-a.Adjust17=isnull(a.Adjust17,0)+isnull(b.Adjust17,0),
-a.Adjust18=isnull(a.Adjust18,0)+isnull(b.Adjust18,0),
-a.Adjust19=isnull(a.Adjust19,0)+isnull(b.Adjust19,0),
-a.Adjust20=isnull(a.Adjust20,0)+isnull(b.Adjust20,0),
-a.Adjust21=isnull(a.Adjust21,0)+isnull(b.Adjust21,0),
-a.Adjust22=isnull(a.Adjust22,0)+isnull(b.Adjust22,0),
-a.Adjust23=isnull(a.Adjust23,0)+isnull(b.Adjust23,0),
-a.Adjust24=isnull(a.Adjust24,0)+isnull(b.Adjust24,0),
-a.Adjust25=isnull(a.Adjust25,0)+isnull(b.Adjust25,0),
-a.Adjust26=isnull(a.Adjust26,0)+isnull(b.Adjust26,0),
-a.Adjust27=isnull(a.Adjust27,0)+isnull(b.Adjust27,0),
-a.Adjust28=isnull(a.Adjust28,0)+isnull(b.Adjust28,0)
-from tax_salary a,tax_adjust b
-where DATEDIFF(m,b.S_WorkDate,'" + dateMonth.ToString("yyyy-MM-dd") + "') = 0  and b.S_Batch='" + batch + "' and DATEDIFF(m,a.S_WorkDate,b.S_WorkDate ) = 0 and a.S_WorkerCode = b.S_WorkerCode ";
+                                a.Adjust9=isnull(a.Adjust9,0)+isnull(b.a9,0),
+                                a.Adjust10=isnull(a.Adjust10,0)+isnull(b.a10,0),
+                                a.Adjust11=isnull(a.Adjust11,0)+isnull(b.a11,0),
+                                a.Adjust12=isnull(a.Adjust12,0)+isnull(b.a12,0),
+                                a.Adjust13=isnull(a.Adjust13,0)+isnull(b.a13,0),
+                                a.Adjust14=isnull(a.Adjust14,0)+isnull(b.a14,0),
+                                a.Adjust15=isnull(a.Adjust15,0)+isnull(b.a15,0),
+                                a.Adjust16=isnull(a.Adjust16,0)+isnull(b.a16,0),
+                                a.Adjust17=isnull(a.Adjust17,0)+isnull(b.a17,0),
+                                a.Adjust18=isnull(a.Adjust18,0)+isnull(b.a18,0),
+                                a.Adjust19=isnull(a.Adjust19,0)+isnull(b.a19,0),
+                                a.Adjust20=isnull(a.Adjust20,0)+isnull(b.a20,0),
+                                a.Adjust21=isnull(a.Adjust21,0)+isnull(b.a21,0),
+                                a.Adjust22=isnull(a.Adjust22,0)+isnull(b.a22,0),
+                                a.Adjust23=isnull(a.Adjust23,0)+isnull(b.a23,0),
+                                a.Adjust24=isnull(a.Adjust24,0)+isnull(b.a24,0),
+                                a.Adjust25=isnull(a.Adjust25,0)+isnull(b.a25,0),
+                                a.Adjust26=isnull(a.Adjust26,0)+isnull(b.a26,0),
+                                a.Adjust27=isnull(a.Adjust27,0)+isnull(b.a27,0),
+                                a.Adjust28=isnull(a.Adjust28,0)+isnull(b.a28,0)
+                                from tax_salary a,#temp b
+                                where DATEDIFF(m,b.S_WorkDate,'" + dateMonth.ToString("yyyy-MM-dd") + "') = 0   and DATEDIFF(m,a.S_WorkDate,b.S_WorkDate ) = 0 and a.S_WorkerCode = b.S_WorkerCode ";
             sqllst.Add(updateSql);
             //string sqlupdatesalary = "update tax_salary set T_DJJE=0 WHERE S_OrgCode = '" + orgCode + "' and DATEDIFF(m,S_WorkDate, '" + dateMonth.ToString("yyyy-MM-dd") + "') = 0 ";
             //sqlupdatesalary += " UPDATE tax_reportstatus SET ReportStatus=0, S_UpdateBy='" + userId + "',S_UpdateDate='" + DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss") + "' where S_OrgCode = '" + orgCode + "' and DATEDIFF(m,S_WorkDate, '" + dateMonth.ToString("yyyy-MM-dd") + "') = 0 ";

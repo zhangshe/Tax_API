@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <PackageReference Include="MySql.Data" Version="8.0.12" />
-    <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.5.0" />
     <PackageReference Include="System.Data.OracleClient" Version="1.0.8" />
     <PackageReference Include="System.Data.SqlClient" Version="4.5.1" />
